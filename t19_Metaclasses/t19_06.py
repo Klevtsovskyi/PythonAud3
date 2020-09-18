@@ -19,24 +19,29 @@ def trace(f):
     return _trace
 
 
-@trace
-def fib(n):
-    if n == 0:
-        return 0
-    elif n == 1:
-        return 1
-    else:
-        return fib(n-1) + fib(n-2)
+def trace_class(cls):
+    for name, method in cls.__dict__.items():
+        if not name.startswith("__"):
+            setattr(cls, name, trace(method))
+    return cls
 
 
-@trace
-def fact(n):
-    if n == 0:
+@trace_class
+class SimpleClass:
+
+    def __init__(self):
+        pass
+
+    def f(self, *args, **kwargs):
+        if kwargs:
+            self.f(*args)
+
+    def g(self):
         return 1
-    else:
-        return n * fact(n-1)
 
 
 if __name__ == '__main__':
-    print(fib(4))
-    print(fact(10))
+    s = SimpleClass()
+    s.f(1, 2, y=1)
+    s.f(1)
+    s.g()
