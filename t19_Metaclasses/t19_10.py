@@ -14,7 +14,6 @@ def union(classname, discname, dct):
         return _getter
 
     cls_dct[discname] = property(getter(0))
-    
     for names in dct.values():
         for i, name in enumerate(names, 1):
             cls_dct[name] = property(getter(i, name))

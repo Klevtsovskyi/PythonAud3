@@ -19,10 +19,13 @@ def trace(f):
     return _trace
 
 
+FUNCTION = type(lambda: None)
+
+
 def trace_class(cls):
-    for name, method in cls.__dict__.items():
-        if not name.startswith("__"):
-            setattr(cls, name, trace(method))
+    for name, attr in cls.__dict__.items():
+        if not name.startswith("__") and isinstance(attr, FUNCTION):
+            setattr(cls, name, trace(attr))
     return cls
 
 
