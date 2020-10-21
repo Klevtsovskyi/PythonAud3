@@ -27,15 +27,15 @@ def beads_probability(beads, count, to_extract):
     choice = np.zeros((TEST_NUM, count))
     for i in range(TEST_NUM):
         choice[i, :] = np.random.choice(beads, count, replace=False)
-    choice = np.sort(choice, axis=1)
+    choice.sort(axis=1)
     to_extract = np.sort(to_extract)
     rez = check(choice, to_extract)
     return np.sum(rez) / TEST_NUM
 
 
 if __name__ == '__main__':
-    beads = np.array([RED, RED, RED, RED,
-                      BLUE, BLUE, BLUE, BLUE,
-                      BLACK, BLACK, BLACK, BLACK])
+    beads = (RED, RED, RED, RED,
+             BLUE, BLUE, BLUE, BLUE,
+             BLACK, BLACK, BLACK, BLACK)
     p = beads_probability(beads, 3, (BLACK, BLACK))
     print(p)

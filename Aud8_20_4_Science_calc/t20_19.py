@@ -33,5 +33,5 @@ def krap_win_probability(n_dice, win_values, lose_values,
 
 
 if __name__ == '__main__':
-    p = krap_win_probability(2, (2, 3, 13), (7, 11), (7, ))
+    p = krap_win_probability(2, (7, 11), (2, 3, 13), (7, ))
     print(p)
