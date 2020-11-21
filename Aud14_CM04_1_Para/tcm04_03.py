@@ -14,7 +14,7 @@ q = Queue()
 start = time()
 
 
-def inp(n, p_time, fixed=False):
+def put(n, p_time, fixed=False):
     for i in range(n):
         t = p_time if fixed else random.random() * (p_time - 1) + 1
         sleep(t)
@@ -25,7 +25,7 @@ def inp(n, p_time, fixed=False):
         q.put(message)
 
 
-def out(n, p_time, fixed=False):
+def get(n, p_time, fixed=False):
     for i in range(n):
         t = p_time if fixed else random.random() * (p_time - 1) + 1
         message = q.get()
@@ -42,8 +42,8 @@ if __name__ == '__main__':
     t1 = 2
     t2 = 4
 
-    th1 = Thread(target=inp, args=(n, t1))
-    th2 = Thread(target=out, args=(n, t2))
+    th1 = Thread(target=put, args=(n, t1))
+    th2 = Thread(target=get, args=(n, t2))
     th1.start()
     th2.start()
 

@@ -20,7 +20,6 @@ def train(arrive_time, transit_time, index):
     sleep(arrive_time)
     logging.debug("Поїзд {} прибув до ділянки".format(index))
     # lock.acquire()
-    # lock.locked()
     with lock:
         logging.debug("Поїзд {} почав проходити ділянку".format(index))
         sleep(transit_time)
