@@ -3,7 +3,7 @@ import math
 
 def positive(f):
     def _positive(*args, **kwargs):
-        res = f(*args, *kwargs)
+        res = f(*args, **kwargs)
         return math.exp(res)
     return _positive
 
