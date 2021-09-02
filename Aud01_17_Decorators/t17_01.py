@@ -12,4 +12,4 @@ if __name__ == '__main__':
     t = [math.pi * i / 36 for i in range(18)]
     p_sin = positive(math.sin)
     for x in t:
-        print(p_sin(x))
+        print(x, math.sin, p_sin(x))

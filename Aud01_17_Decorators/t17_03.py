@@ -3,7 +3,7 @@
 def args_kwargs(f):
     def _args_kwargs(*args, **kwargs):
         if len(args) != len(kwargs):
-            raise KeyError("Кількість позиційних параматерів не дорівню кількості ключових!")
+            raise RuntimeError("Кількість позиційних параматерів не дорівню кількості ключових!")
         return f(*args, **kwargs)
     return _args_kwargs
 
