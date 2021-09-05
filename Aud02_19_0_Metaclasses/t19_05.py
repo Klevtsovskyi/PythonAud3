@@ -7,7 +7,7 @@ def check_types(cls):
         orig_init(self, *args, **kwargs)
         for var, value in self.__dict__.items():
             if not isinstance(value, cls._field_type[var]):
-                raise ValueError("Атрибут {} не є типом {}!"
+                raise TypeError("Атрибут {} не є типом {}!"
                                  .format(var, cls._field_type[var].__name__))
 
     cls.__init__ = __init__

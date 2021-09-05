@@ -19,9 +19,6 @@ def trace(f):
     return _trace
 
 
-FUNCTION = type(lambda: None)
-
-
 class TraceMeta(type):
 
     """def __init__(cls, classname, bases, cls_dct):
@@ -32,7 +29,7 @@ class TraceMeta(type):
 
     def __new__(mcs, classname, bases, cls_dct):
         for name, attr in cls_dct.items():
-            if not name.startswith("__") and isinstance(attr, FUNCTION):
+            if not name.startswith("__") and callable(attr):
                 cls_dct[name] = trace(attr)
         return super().__new__(mcs, classname, bases, cls_dct)
 

@@ -3,8 +3,8 @@
 def only_args(f):
     def _only_args(*args, **kwargs):
         if kwargs:
-            raise TypeError("...")
-        return f(*args, *kwargs)
+            raise RuntimeError("Функції передано ключові параметри")
+        return f(*args, **kwargs)
     return _only_args
 
 
