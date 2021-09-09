@@ -24,7 +24,7 @@ class TraceMeta(type):
     """def __init__(cls, classname, bases, cls_dct):
         super().__init__(classname, bases, cls_dct)
         for name, attr in cls_dct.items():
-            if not name.startswith("__") and isinstance(attr, FUNCTION):
+            if not name.startswith("__") and callable(attr):
                 setattr(cls, name, trace(attr))"""
 
     def __new__(mcs, classname, bases, cls_dct):
