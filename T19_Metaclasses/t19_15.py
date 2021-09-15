@@ -36,15 +36,15 @@ class TraceMeta(type):
 
 class SimpleClass(metaclass=TraceMeta):
 
-        def __init__(self):
-            pass
+    def __init__(self):
+        pass
 
-        def f(self, x=0):
-            if x:
-                return self.g()
+    def f(self, x=0):
+        if x:
+            return self.g()
 
-        def g(self):
-            return 1
+    def g(self):
+        return 1
 
 
 if __name__ == '__main__':
