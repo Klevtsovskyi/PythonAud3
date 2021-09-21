@@ -1,56 +1,62 @@
-
-
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-"""
-a = -4*np.pi
-b = 4*np.pi
-m = 20
-"""
-a = -0.99
-b = 0.99
-m = 20
 
+# Початкові дані
+a = -4*np.pi  # Початок відрізка
+b = 4*np.pi   # Кінець відрізка
+m = 20        # Кількість ітерацій
+
+# Створюємо розбиття відрізка [a, b]
 x = np.linspace(a, b, int((b - a) * 50))
 
+# Зберігаємо посилання на поточне полотно,
+# щоб в подальшому його використати для анімації
 fig = plt.figure()
-ax = plt.axes(xlim=(a, b), ylim=(-4, 4))
-line, = ax.plot([], [], lw=3)
+# Змінюємо масштаб осей
+plt.axes(xlim=(a, b), ylim=(-5, 5))
+# Створємо пустий графік і надаємо йому параметри відображення
+line, = plt.plot([], [], "-b", lw=3)
 
 
-def func1_sin(x, n):
+def func01_sin(x, n):
+    """ Повертає значення часткової суми ряду Тейлора для y = sin(x)"""
     s = x.copy()
-    a = x.copy()
+    p = x.copy()
     for k in range(2, n + 1):
-        a *= -x*x / ((2*k - 2)*(2*k - 1))
-        s += a
-    return s
-
-
-def func14(x, n):
-    s = np.ones_like(x)
-    a = np.ones_like(x)
-    for k in range(2, n + 1):
-        a *= - x * (2*k - 3) / (2*k - 2)
-        s += a
+        p *= -x*x / ((2*k - 2)*(2*k - 1))
+        s += p
     return s
 
 
 def init():
-    # plt.plot(x, np.sin(x), "--r")
-    plt.plot(x, 1 / np.sqrt(1 + x), "--r")
-    line.set_data([], [])
+    """ Функція, яка викликається один раз на початку анімації"""
+    # Будуємо графік y = sin(x)
+    plt.plot(x, np.sin(x), "--r")
     return line,
 
 
 def animate(i):
-    y = func14(x, i + 1)
+    """ Функція, яка викликається при анімації
+    :param i: номер ітерації
+    """
+    # Отримуємо масив значень часткової суми ряду Тейлора
+    y = func01_sin(x, i + 1)
+    # Відображаємо цей графік на полотні
     line.set_data(x, y)
     return line,
 
 
-anim = FuncAnimation(fig, animate, init_func=init, frames=m, interval=2000, repeat=True)
-plt.show()
-# anim.save("sin.gif", writer="pillow") # pip install pillow
+if __name__ == "__main__":
+    anim = FuncAnimation(
+        fig,             # Полотно, на якому буде зображено анімацію
+        animate,         # Функція для анімації
+        init_func=init,  # Функція, яка викликається один раз перед анімацєю
+        frames=m,        # Кількість ітерацій анімації (починається з 0)
+        interval=2000,   # Кількість мілісекунд на ітерацію
+        repeat=True      # Чи повторювати анімацію після останньої ітерації
+    )
+    plt.show()
+    # Збереження анімації
+    # anim.save("sin.gif", writer="pillow")  # pip install pillow

@@ -12,7 +12,7 @@ def gety(f, x):
     n = x.size
     y = np.zeros(n)
     for i in range(n):
-        y[i] = f(int(x[i]))
+        y[i] = f(x[i])
     return y
 
 

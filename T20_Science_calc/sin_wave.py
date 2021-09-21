@@ -6,12 +6,12 @@ from matplotlib.animation import FuncAnimation
 
 
 fig = plt.figure()
-ax = plt.axes(xlim=(0, 4), ylim=(-2, 2))
-line1, line2 = ax.plot([], [], "--g", [], [], "-r")
+plt.axes(xlim=(0, 4), ylim=(-5, 5))
+line1, line2 = plt.plot([], [], "--g", [], [], "-.r")
+x = np.linspace(0, 4, 1000)
 
 
 def animate(i):
-    x = np.linspace(0, 4, 1000)
     y1 = np.sin(2*np.pi*(x - 0.01 * i))
     y2 = np.cos(2*np.pi*(x + 0.01 * i))
     line1.set_data(x, y1)
