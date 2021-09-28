@@ -1,116 +1,125 @@
-
-
 import numpy as np
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 
 
-NUM = 5000
+NUM = 500
 
 
-def lagr(f, a, b, n):  # T20.6
-    xk = np.linspace(a, b, n)
+def taylor_sin(n):  # T20.04а
+    def _taylor_sin(x):
+        ak = x.copy()
+        s = x.copy()
+        for k in range(1, n):
+            ak *= -x * x / (2 * k) / (2 * k + 1)
+            s += ak
+        return s
+
+    _taylor_sin.__name__ = f"taylor(sin, {n})"
+    return _taylor_sin
+
+
+def lagrange(f, a, b, m):  # T20.06
+    xk = np.linspace(a, b, m)
     yk = f(xk)
 
-    def _lagr(x):
+    def _lagrange(x):
         y = np.zeros_like(x)
         lk = np.ones_like(x)
-        for k in range(n):
+        for k in range(m):
             lk.fill(1)
-            for i in range(n):
+            for i in range(m):
                 if i != k:
                     lk *= (x - xk[i]) / (xk[k] - xk[i])
             y += yk[k] * lk
         return y
-    return _lagr
+
+    _lagrange.__name__ = f"lagrange({f.__name__}, {m})"
+    return _lagrange
 
 
-def func1_sin(n):  # N20.4 а
-    def _fucn1(x):
-        p = x.copy()
-        s = x.copy()
-        for k in range(2, n + 1):
-            p *= -x*x / ((2*k - 2) * (2*k - 1))
-            s += p
-        return s
-    return _fucn1
-
-
-def func13(n):  # T20.4 н
-    def _func13(x):
-        p = np.ones_like(x)
-        s = np.ones_like(x)
-        for k in range(2, n + 1):
-            p *= -x * (2*k - 3) / (2*k - 2)
-            s += p
-        return s
-    return _func13
-
-
-def mc_square(f1, f2, xmin, xmax, ymin, ymax):
+def average_error(f1, f2, xmin, xmax, ymin, ymax):
     box_square = (xmax - xmin) * (ymax - ymin)
     count = int(box_square) * NUM
     x = np.random.uniform(xmin, xmax, count)
     y = np.random.uniform(ymin, ymax, count)
     y1 = f1(x)
     y2 = f2(x)
-    count_in = len(y[np.logical_or(
-        np.logical_and(y1 <= y, y <= y2),
-        np.logical_and(y2 <= y, y <= y1))])
+    count_in = len(
+        y[
+            np.logical_or(
+                np.logical_and(y1 <= y, y <= y2),
+                np.logical_and(y2 <= y, y <= y1)
+            )
+        ]
+    )
+    # print(count, count_in)
+    square = box_square * count_in / count
+    # print(square, box_square)
+    return np.sqrt(square / box_square)
 
-    return box_square * count_in / count, box_square
 
+def move_spines_ticks():
+    a0, b0, c0, d0 = plt.axis()
+    d0 = (b0 - a0) * 3 / 8
+    c0 = - d0
+    plt.axis([a0, b0, c0, d0])
 
-def movespinesticks():
     ax = plt.gca()
     ax.spines["top"].set_color("none")
     ax.spines["right"].set_color("none")
     ax.spines["bottom"].set_position(("data", 0))
     ax.spines["left"].set_position(("data", 0))
+    ax.xaxis.set_ticks_position("bottom")
+    ax.yaxis.set_ticks_position("left")
+
+    plt.legend(loc="best")
 
 
-def plotf1f2(a, b, n, f1, f2):
-    x = np.linspace(a, b, n)
+def plot_f1f2(x, f1, f2):
     y1 = f1(x)
     y2 = f2(x)
 
-    plt.subplot(2, 1, 1)
-    plt.plot(x, y1)
-    plt.plot(x, y2)
-    plt.fill_between(x, y1, y2, where=np.abs(y2 - y1) >= 0, facecolor="green")
+    plt.plot(x, y1, "-b", lw=2, label=f1.__name__)
+    plt.plot(x, y2, "-r", lw=2, label=f2.__name__)
+    plt.fill_between(x, y1, y2, facecolor="yellow")
 
-    a0, b0, c0, d0 = plt.axis()
-    square, box_square = mc_square(f1, f2, a0, b0, c0, d0)
-    print("Error: ", np.sqrt(square / box_square))
+    error = average_error(f1, f2, *plt.axis())
+    print("Середня похибка наближення: ", error)
 
-    movespinesticks()
-    plt.xlabel("x")
-    plt.ylabel("y")
+    move_spines_ticks()
 
-    ydif = np.abs(y2 - y1)
 
-    plt.subplot(2, 1, 2)
-    plt.plot(x, ydif, label="diff")
+def plot_diff(x, f1, f2):
+    y = f2(x) - f1(x)
 
-    movespinesticks()
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.legend(loc="best")
+    plt.plot(x, y, "-m", label="difference")
+    plt.fill_between(x, y, facecolor="pink")
+
+    move_spines_ticks()
+
+
+def plot_functions(a, b, n, func, *ff):
+    plt.figure(figsize=(len(ff) * 6, 8))
+    x = np.linspace(a, b, n)
+
+    for i in range(len(ff)):
+        plt.subplot(2, len(ff), i + 1)
+        plot_f1f2(x, func, ff[i])
+
+        plt.subplot(2, len(ff), i + 1 + len(ff))
+        plot_diff(x, func, ff[i])
 
     plt.show()
 
 
-if __name__ == '__main__':
-    a = -2*np.pi
-    b = 2*np.pi;
-    m = 20
-    #plotf1f2(a, b, 1000, np.sin, func1_sin(m))
-
-    a = -0.9
-    b = 0.9
-    m = 20
-    #plotf1f2(a, b, 1000, lambda x: 1 / np.sqrt(1 + x), func13(m))
-
-    a = 0
-    b = 2*np.pi
-    m = 2**4
-    plotf1f2(a, b, 1000, np.sin, lagr(np.sin, a, b, m))
+if __name__ == "__main__":
+    a = -2 * np.pi
+    b = 2 * np.pi
+    n = 100
+    m = 6
+    plot_functions(
+        a, b, n,
+        np.sin,
+        taylor_sin(m),
+        lagrange(np.sin, a, b, m)
+    )
