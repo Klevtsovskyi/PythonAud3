@@ -18,22 +18,22 @@ def taylor_sin(n):  # T20.04а
     return _taylor_sin
 
 
-def lagrange(f, a, b, m):  # T20.06
-    xk = np.linspace(a, b, m)
+def lagrange(f, a, b, n):  # T20.06
+    xk = np.linspace(a, b, n)
     yk = f(xk)
 
     def _lagrange(x):
         y = np.zeros_like(x)
         lk = np.ones_like(x)
-        for k in range(m):
+        for k in range(n):
             lk.fill(1)
-            for i in range(m):
+            for i in range(n):
                 if i != k:
                     lk *= (x - xk[i]) / (xk[k] - xk[i])
             y += yk[k] * lk
         return y
 
-    _lagrange.__name__ = f"lagrange({f.__name__}, {m})"
+    _lagrange.__name__ = f"lagrange({f.__name__}, {n})"
     return _lagrange
 
 
@@ -84,7 +84,7 @@ def plot_f1f2(x, f1, f2):
     plt.fill_between(x, y1, y2, facecolor="yellow")
 
     error = average_error(f1, f2, *plt.axis())
-    print("Середня похибка наближення: ", error)
+    print(f"Середня похибка наближення для {f2.__name__}: {error}")
 
     move_spines_ticks()
 
@@ -98,9 +98,9 @@ def plot_diff(x, f1, f2):
     move_spines_ticks()
 
 
-def plot_functions(a, b, n, func, *ff):
+def plot_functions(a, b, m, func, *ff):
     plt.figure(figsize=(len(ff) * 6, 8))
-    x = np.linspace(a, b, n)
+    x = np.linspace(a, b, m)
 
     for i in range(len(ff)):
         plt.subplot(2, len(ff), i + 1)
@@ -115,11 +115,11 @@ def plot_functions(a, b, n, func, *ff):
 if __name__ == "__main__":
     a = -2 * np.pi
     b = 2 * np.pi
-    n = 100
-    m = 6
+    m = 100
+    n = 6
     plot_functions(
-        a, b, n,
+        a, b, m,
         np.sin,
-        taylor_sin(m),
-        lagrange(np.sin, a, b, m)
+        taylor_sin(n),
+        lagrange(np.sin, a, b, n)
     )
