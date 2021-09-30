@@ -2,13 +2,14 @@ import numpy as np
 
 
 def is_equilateral_triangle(tri):
+    d = len(tri.shape) - 1
     # print(tri)
-    tri_shifted = np.roll(tri, 1, axis=2)
+    tri_shifted = np.roll(tri, 1, axis=d)
     # print(tri_shifted)
-    dis = np.sqrt(np.sum((tri - tri_shifted)**2, axis=1))
+    dis = np.sqrt(np.sum((tri - tri_shifted)**2, axis=d - 1))
     # print(dis)
     dis0 = np.full_like(dis, dis[0])
-    return np.all(np.isclose(dis, dis0), axis=1)
+    return np.all(np.isclose(dis, dis0), axis=d - 1)
 
 
 def count_equilateral_triangles(pts):
