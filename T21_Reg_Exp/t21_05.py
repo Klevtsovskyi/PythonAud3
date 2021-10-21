@@ -1,5 +1,3 @@
-
-
 import re
 
 
@@ -42,16 +40,8 @@ def change_dates(string, n):
     return re.sub(DATE, _change_date, string)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     n = int(input())
-    s = """Some text.
-Date 1: 2020/10/21
-Date 2: 2020-10-22
-Date 3: 23.10.2020
-Another dates: 1.1.989. :8/8/8: a7/7/7! 06-05-04! ^3-2-1!
-More dates: 2.10.1999, 1988-09-3, 09.2.2003, 2008/11/11."""
-    s = change_dates(s, n)
-    print(s)
 
     with open("input.txt", "r", encoding="utf-8") as inp:
         s = inp.read()

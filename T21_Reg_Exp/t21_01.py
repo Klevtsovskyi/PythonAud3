@@ -1,20 +1,17 @@
-
-
 import re
 
 
-DATE1 = r"\b\d{1,4}/\d{1,2}/\d{1,2}"
-DATE2 = r"\b\d{1,2}\.\d{1,2}\.\d{1,4}"
+DATE1 = r"\b\d{1,2}\.\d{1,2}\.\d{1,4}\b"
+DATE2 = r"\b\d{1,4}/\d{1,2}/\d{1,2}\b"
 DATE = DATE1 + "|" + DATE2
 
 
 def _change_date(match):
     date = match.group()
-    print(date)
-    if "/" in date:
-        y, m, d = date.split("/")
-    else:
+    if "." in date:
         d, m, y = date.split(".")
+    else:
+        y, m, d = date.split("/")
     while len(y) != 4:
         y = "0" + y
     if len(m) != 2:
@@ -31,7 +28,7 @@ def change_dates(string):
     return re.sub(DATE, _change_date, string)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     s = """Some text.
 Date 1: 2020/10/21
 Date 2: 2020-10-22

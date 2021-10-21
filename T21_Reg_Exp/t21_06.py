@@ -1,14 +1,12 @@
-
-
 import re
 
-EMAIL = r"^(?P<email>[A-Za-z](?:\w+?\.{0,1})+?\b@[a-z]\w+?\.(?:[a-z]{2,}\.?)+)\b"
-MESSAGE = r": (?P<message>.*)"
 
+EMAIL = r"^(?P<email>(?:[A-Za-z]\w+?\.?)+\b@[a-z][a-z0-9]+?\.(?:[a-z][a-z0-9]+?\.?)+?)\b"
+MESSAGE = r": (?P<message>.*)"
 PATTERN = EMAIL + MESSAGE
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with open("input.txt", "r", encoding="utf-8") as inp:
         text = inp.read()
 
