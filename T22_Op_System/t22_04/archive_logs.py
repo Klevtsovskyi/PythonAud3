@@ -1,5 +1,3 @@
-
-
 import os
 import sys
 import datetime
@@ -24,6 +22,6 @@ def archive_logs(date):
                     tf.add(os.path.join(log_dir, name), name)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     archive_date = datetime.datetime.now()
     archive_logs(archive_date)

@@ -1,5 +1,3 @@
-
-
 import os
 import sys
 import datetime
@@ -19,6 +17,5 @@ def create_log():
         out.write(text)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     create_log()
-
