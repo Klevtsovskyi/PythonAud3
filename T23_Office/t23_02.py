@@ -1,5 +1,3 @@
-
-
 from docx import Document
 import re
 
@@ -29,14 +27,14 @@ def change_dates(string):
     return re.sub(DATE, _change_date, string)
 
 
-def change_dates_docx(input, output):
-    doc = Document(input)
+def change_dates_docx(inp, out):
+    doc = Document(inp)
 
     for paragraph in doc.paragraphs:
         paragraph.text = change_dates(paragraph.text)
 
-    doc.save(output)
+    doc.save(out)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     change_dates_docx("input.docx", "output.docx")

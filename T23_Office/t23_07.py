@@ -1,5 +1,3 @@
-
-
 from docx import Document
 import os
 import re
@@ -10,7 +8,7 @@ PARAGRAPH = r".*({}).*"
 
 def find_paragraphs(directory, subrgx):
     pattern = PARAGRAPH.format(subrgx)
-    rgx = re.compile(pattern, flags=re.IGNORECASE)
+    rgx = re.compile(pattern, flags=re.DOTALL | re.IGNORECASE)
 
     for root, dirs, files in os.walk(directory):
         for file in files:
@@ -19,10 +17,10 @@ def find_paragraphs(directory, subrgx):
                 doc = Document(path)
                 for i, paragraph in enumerate(doc.paragraphs, 1):
                     m = rgx.match(paragraph.text)
-                    if m:
+                    if m is not None:
                         print(path, i, paragraph.text)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     subrgx = input("Введіть регулярний вираз: ")
     find_paragraphs("phil", subrgx)
