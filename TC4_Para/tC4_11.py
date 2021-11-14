@@ -1,6 +1,5 @@
-
-
-from threading import Thread, Lock
+from threading import Thread
+from queue import Queue
 from time import time, sleep
 import random
 import logging
@@ -9,7 +8,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 
-lock = Lock()
+q = Queue(maxsize=1)
 start = time()
 
 
@@ -19,11 +18,10 @@ def train(arrive_time, transit_time, index):
           .format(index, arrive_time, transit_time))
     sleep(arrive_time)
     logging.debug("Поїзд {} прибув до ділянки".format(index))
-    # lock.acquire()
-    with lock:
-        logging.debug("Поїзд {} почав проходити ділянку".format(index))
-        sleep(transit_time)
-    # lock.release()
+    q.put(index)
+    logging.debug("Поїзд {} почав проходити ділянку".format(index))
+    sleep(transit_time)
+    index = q.get()
     logging.debug("Поїзд {} пройшов ділянку".format(index))
     print("Поїзд {} пройшов ділянку. Повний час подорожі {:.4f}"
           .format(index, time() - start))

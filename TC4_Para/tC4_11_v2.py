@@ -1,6 +1,4 @@
-
-
-from threading import Thread
+from threading import Timer
 from queue import Queue
 from time import time, sleep
 import random
@@ -14,11 +12,7 @@ q = Queue(maxsize=1)
 start = time()
 
 
-def train(arrive_time, transit_time, index):
-    print("Поїзд {} прибуває через {:.4f} секунд і проходить "
-          "ділянку за {:.4f} секунд"
-          .format(index, arrive_time, transit_time))
-    sleep(arrive_time)
+def train(transit_time, index):
     logging.debug("Поїзд {} прибув до ділянки".format(index))
     q.put(index)
     logging.debug("Поїзд {} почав проходити ділянку".format(index))
@@ -32,7 +26,10 @@ def train(arrive_time, transit_time, index):
 def next_train(t1, t2, t3, t4, index):
     transit_time = random.random() * (t2 - t1) + t1
     arrive_time = random.random() * (t4 - t3) + t3
-    th = Thread(target=train, args=(arrive_time, transit_time, index))
+    print("Поїзд {} прибуває через {:.4f} секунд і проходить "
+          "ділянку за {:.4f} секунд"
+          .format(index, arrive_time, transit_time))
+    th = Timer(arrive_time, train, args=(transit_time, index))
     th.start()
     return th
 

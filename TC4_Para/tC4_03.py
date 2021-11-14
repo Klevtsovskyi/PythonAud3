@@ -1,5 +1,3 @@
-
-
 from threading import Thread
 from queue import Queue
 from time import time, sleep
@@ -18,10 +16,8 @@ def put(n, p_time, fixed=False):
     for i in range(n):
         t = p_time if fixed else random.random() * (p_time - 1) + 1
         sleep(t)
-        message = ("ПОВІДОМЛЕННЯ {}: створено в {:.4f}"
-                   .format(i, time() - start))
-        logging.debug("В чергу додано повідомлення {} через {:.4f} секунд"
-                      .format(message, t))
+        message = f"ПОВІДОМЛЕННЯ {i} (створено о {time() - start:.4f})"
+        logging.debug(f"В чергу додано {message}, яке створювалось {t:.4f} секунд")
         q.put(message)
 
 
@@ -29,15 +25,12 @@ def get(n, p_time, fixed=False):
     for i in range(n):
         t = p_time if fixed else random.random() * (p_time - 1) + 1
         message = q.get()
-        logging.debug("З черги вийнято повідомлення {}, яке буде "
-                      "оброблятись {:.4f} секунд"
-                      .format(message, t))
+        logging.debug(f"З черги отримано {message}, яке буде оброблятись {t:.4f} секунд")
         sleep(t)
-        print(message, "оброблене через {:.4f} після старту"
-              .format(time() - start))
+        print(f"\"{message}\" оброблене на {time() - start:.4f} секунді")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     n = 10
     t1 = 2
     t2 = 4
