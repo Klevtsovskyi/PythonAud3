@@ -1,5 +1,6 @@
-from threading import Thread, Lock
-from time import time, sleep
+import threading
+from time import sleep
+from time import time
 import random
 import logging
 
@@ -7,35 +8,30 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 
-lock = Lock()
+# lock = threading.Semaphore(1)
+lock = threading.Lock()
 start = time()
 
 
-def train(arrive_time, transit_time, index):
-    print("Поїзд {} прибуває через {:.4f} секунд і проходить "
-          "ділянку за {:.4f} секунд"
-          .format(index, arrive_time, transit_time))
+def log(message: str):
+    t = time() - start
+    name = threading.current_thread().getName()
+    logging.debug("[%6.3f] %s: %s", t, name, message)
+
+
+def train(transit_time, arrive_time):
     sleep(arrive_time)
-    logging.debug("Поїзд {} прибув до ділянки".format(index))
+    log("arrived to the sector")
     # lock.acquire()
     with lock:
-        logging.debug("Поїзд {} почав проходити ділянку".format(index))
+        log(f"starts passing the sector")
         sleep(transit_time)
     # lock.release()
-    logging.debug("Поїзд {} пройшов ділянку".format(index))
-    print("Поїзд {} пройшов ділянку. Повний час подорожі {:.4f}"
-          .format(index, time() - start))
+    log("passed the sector")
+    print(f"{threading.current_thread().getName()} passed the sector.")
 
 
-def next_train(t1, t2, t3, t4, index):
-    transit_time = random.random() * (t2 - t1) + t1
-    arrive_time = random.random() * (t4 - t3) + t3
-    th = Thread(target=train, args=(arrive_time, transit_time, index))
-    th.start()
-    return th
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     n = 10
     t1 = 1
     t2 = 5
@@ -44,6 +40,22 @@ if __name__ == '__main__':
 
     ths = []
     for i in range(n):
-        ths.append(next_train(t1, t2, t3, t4, i))
-    for i in range(n):
-        ths[i].join()
+        transit_time = random.random() * (t2 - t1) + t1
+        arrive_time = random.random() * (t4 - t3) + t3
+        ths.append(
+            threading.Thread(
+                target=train,
+                args=(transit_time, arrive_time),
+                name=f"Train {i}"
+            )
+        )
+        print(
+            f"Train {i} arrives at {arrive_time:6.3f} "
+            f"and passes for {transit_time:6.3f}"
+        )
+
+    for th in ths:
+        th.start()
+    for th in ths:
+        th.join()
+    log("all trains passed the sector")
