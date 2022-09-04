@@ -1,5 +1,3 @@
-
-
 def trace(f):
     depth = 0
 
@@ -26,7 +24,7 @@ def fib(n):
     elif n == 1:
         return 1
     else:
-        return fib(n-1) + fib(n-2)
+        return fib(n - 1) + fib(n - 2)
 
 
 @trace
@@ -34,7 +32,7 @@ def fact(n):
     if n == 0:
         return 1
     else:
-        return n * fact(n-1)
+        return n * fact(n - 1)
 
 
 if __name__ == '__main__':

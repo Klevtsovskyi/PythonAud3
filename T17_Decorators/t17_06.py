@@ -1,5 +1,3 @@
-
-
 def only_args(f):
     def _only_args(*args, **kwargs):
         if kwargs:

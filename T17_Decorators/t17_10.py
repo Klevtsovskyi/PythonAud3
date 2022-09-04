@@ -2,17 +2,17 @@ import math
 import random
 
 
-def cash(f):
+def cache(f):
     results = {}
 
-    def _cash(*args):
+    def _cache(*args):
         if args not in results:
             results[args] = f(*args)
         return results[args]
-    return _cash
+    return _cache
 
 
-@cash
+@cache
 def is_prime(x):
     for i in range(2, math.floor(math.sqrt(x)) + 1):
         if x % i == 0:
