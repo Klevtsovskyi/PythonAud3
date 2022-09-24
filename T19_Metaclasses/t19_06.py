@@ -1,5 +1,3 @@
-
-
 def trace(f):
     depth = 0
 

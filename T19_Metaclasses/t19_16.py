@@ -1,5 +1,3 @@
-
-
 class PoolMeta(type):
 
     def __init__(cls, classname, bases, cls_dct):
