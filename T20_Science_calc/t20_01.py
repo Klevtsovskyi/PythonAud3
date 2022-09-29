@@ -2,13 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+@np.vectorize
 def func01(n):
-    return (n * 3 / 2 * (1 - 1/pow(3, n+1)) * (n - 3) * pow(n, 1/n) /
-            (2*n*n + 5))
+    return 3 / 2 * (1 - 1/pow(3, n+1)) * (n - 3) * pow(n, 1/n) / (2.0 * n + 5 / n)
 
 
 def gety(f, x):
-    """ Повертає масив значень функції f(x)"""
+    """ Повертає масив значень функції f(x) (альтернатва векторизації)"""
     n = x.size
     y = np.zeros(n)
     for i in range(n):
@@ -16,39 +16,14 @@ def gety(f, x):
     return y
 
 
-def func01_gen(n, step):  # а
-    s = 1
-    p = 1
-    for _ in range(n):
-        p *= 1/3
-        s += p
-    while True:
-        yield n * s * (n - 3) * pow(n, 1/n) / (2*n*n + 5)
-        for _ in range(step):
-            p *= 1/3
-            s += p
-        n += step
-
-
-def vect(fgen, a, b, step=1):
-    """ Повертає масиви значень аргументів (x) та функції (f(x))
-        по розбиттю піввідрізка [a, b) з кроком step
-    """
-    x = np.arange(a, b, step)
-    y = np.zeros_like(x, dtype=float)
-    gen = fgen(a, step)
-    for i in range(x.size):
-        y[i] = next(gen)
-    return x, y
-
-
 def plot_seq(x, y, b=None, eps=0.01, forall=True):
     """ Візуалізує послідовність y = f(x)"""
+    plt.figure(figsize=(12, 8))
     if b is None:
         # Якщо границя послідовності невідома, будуємо послідовнісь
         # та повертаємо її останній елемент за розбиттям
         plt.plot(x, y, ".b")
-        return y[-1]
+        return x[-1], y[-1]
     else:
         # Якщо границя послідовності відома,
         # перевіряємо, чи потрапляють останні елементи у проміжок
@@ -70,7 +45,7 @@ def plot_seq(x, y, b=None, eps=0.01, forall=True):
         # Якщо останній елемент послідовності не потрапив у проміжок,
         # повертаємо None
         if not prev:
-            return
+            return None, None
 
         # Якщо forall=True, будуємо на графіку всі елементи,
         # інакше тільки ті, що потрапили в проміжок
@@ -88,17 +63,17 @@ def plot_seq(x, y, b=None, eps=0.01, forall=True):
         plt.axis([x[begin], x[-1], b - eps*2, b + eps*2])
         # Повертаємо номер останнього елемента послідовності,
         # який потрапив у проміжок за даним розбиттям
-        return x[k]
+        return x[k], y[k]
 
 
 if __name__ == "__main__":
     t = (1, 200, 1)  # параметри розбиття: (початок, кінець, крок)
-    # x = np.arange(*t)
-    # y = gety(func01, x)
-    x, y = vect(func01_gen, *t)
+    x = np.arange(*t)
+    y = func01(x)
     # print(x, y)
     # print(plot_seq(x, y))
     b = 0.75  # границя
     eps = 0.01
-    print(plot_seq(x, y, b, eps, True))
+    x0, y0 = plot_seq(x, y, b, eps, True)
+    print(x0, y0)
     plt.show()
