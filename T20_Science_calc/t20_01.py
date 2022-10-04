@@ -18,7 +18,7 @@ def gety(f, x):
 
 def plot_seq(x, y, b=None, eps=0.01, forall=True):
     """ Візуалізує послідовність y = f(x)"""
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(12, 9))
     if b is None:
         # Якщо границя послідовності невідома, будуємо послідовнісь
         # та повертаємо її останній елемент за розбиттям
