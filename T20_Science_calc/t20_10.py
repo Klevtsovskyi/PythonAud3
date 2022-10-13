@@ -37,7 +37,7 @@ if __name__ == "__main__":
     print(orthonormal_v1(x))
     print(orthonormal_v2(x))
 
-    x = np.random.randn(2, 4)
+    x = np.random.randn(3, 3)
     print(x)
     print(orthonormal_v1(x))
     print(orthonormal_v2(x))

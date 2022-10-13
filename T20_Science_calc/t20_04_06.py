@@ -68,13 +68,11 @@ def average_error(f1, f2, xmin, xmax, ymin, ymax):
     y1 = f1(x)
     y2 = f2(x)
     # Кількість точок, що потрапили у проміжок
-    count_in = len(
-        y[
-            np.logical_or(
-                np.logical_and(y1 <= y, y <= y2),
-                np.logical_and(y2 <= y, y <= y1)
-            )
-        ]
+    count_in = np.sum(
+        np.logical_or(
+            np.logical_and(y1 <= y, y <= y2),
+            np.logical_and(y2 <= y, y <= y1)
+        )
     )
     # print(count, count_in)
     square = box_square * count_in / count  # Площа проміжку
