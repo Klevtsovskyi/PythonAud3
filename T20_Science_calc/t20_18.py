@@ -18,7 +18,5 @@ if __name__ == "__main__":
     print("Ймовірність перемоги: ", probability)
     print("Справедлива сума виграшу: ", 1 / probability)
     print("Поточна сума виграшу: ", reward)
-    print("Кількість виграих грошей при {} повторень гри: {:.1f}"
-          .format(TEST_NUM, money_won))
-    print("Кількіість виграних грошей в середньому: {:.3f}"
-          .format(money_won / TEST_NUM))
+    print(f"Кількість виграих грошей при {TEST_NUM} повторень гри: {money_won:.1f}")
+    print(f"Кількіість виграних грошей в середньому: {money_won / TEST_NUM:.3f}")
