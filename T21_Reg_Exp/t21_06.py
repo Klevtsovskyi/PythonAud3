@@ -1,7 +1,7 @@
 import re
 
 
-EMAIL = r"^(?P<email>(?:[A-Za-z]\w*\.?)+\b@(?:[a-z][a-z0-9]\.)+[a-z]{2,})"
+EMAIL = r"^(?P<email>(?:[a-z][\w\-]*\.?)+\b@(?:[a-z][a-z0-9]*\.)+[a-z]{2,})"
 MESSAGE = r": (?P<message>.*)"
 PATTERN = EMAIL + MESSAGE
 
@@ -13,7 +13,7 @@ if __name__ == "__main__":
     emails = []
     messages = []
 
-    for match in re.finditer(PATTERN, text, flags=re.MULTILINE):
+    for match in re.finditer(PATTERN, text, re.MULTILINE | re.IGNORECASE):
         emails.append(match.group("email"))
         messages.append(match.group("message"))
     
