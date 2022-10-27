@@ -1,9 +1,9 @@
 import re
 
 
-EMAIL = r"^(?P<email>(?:[a-z][\w\-]*\.?)+\b@(?:[a-z][a-z0-9]*\.)+[a-z]{2,})"
-MESSAGE = r": (?P<message>.*)"
-PATTERN = EMAIL + MESSAGE
+EMAIL = r"^(?P<email>(?:[a-z]\w+?[\.\-]?)+\b@(?:[a-z]\w*\.)+[a-z]{2,})"
+MESSAGE = r"(?P<message>.*)"
+PATTERN = EMAIL + ": " + MESSAGE
 
 
 if __name__ == "__main__":
