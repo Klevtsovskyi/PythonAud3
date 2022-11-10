@@ -1,21 +1,17 @@
 import openpyxl
 from docx import Document
-import re
+from docx.shared import Pt, Cm
 
 
-INVOICE = r"(Рахунок\s+?№\s+?)(_+)\b"
-DATE = r"(Дата:?\s+?)(__.__.____)\b"
-CUSTOMER = r"(Покупець:?\s+?)(_+)\b"
-TOTAL = r"(Всього:?\s+?)(_+)\b"
-
-rgxINVOICE = re.compile(INVOICE)
-rgxDATE = re.compile(DATE)
-rgxCUSTOMER = re.compile(CUSTOMER)
-rgxTOTAL = re.compile(TOTAL)
+def set_column_width(column, width):
+    """ Встановлює ширину рядка таблиці"""
+    for cell in column.cells:
+        cell.width = width
 
 
-def create_invoice(invoice_no, data, template):
-    wb = openpyxl.load_workbook(data)
+def create_invoice(invoice_no: int, datafile: str):
+    """ Створює рахунок за номером"""
+    wb = openpyxl.load_workbook(datafile)
 
     ws = wb["invoices"]
     for row in ws.rows:
@@ -57,51 +53,62 @@ def create_invoice(invoice_no, data, template):
 
     # print(products)
 
-    doc = Document(template)
+    # Створюємо документ Word
+    doc = Document()
+    # Задаємо загальний стиль документа
+    style = doc.styles["Normal"]
+    style.font.name = "Times New Roman"  # Тип шрифту
+    style.font.size = Pt(14)  # Розмір шрифту
 
+    # Додаємо номер рахунку та дату
+    table = doc.add_table(1, 2)
+    row = table.rows[0]
+    paragraph = row.cells[0].add_paragraph(f"Рахунок № {invoice_no}")
+    paragraph.alignment = 0
+    paragraph = row.cells[1].add_paragraph(f"Дата {date}")
+    paragraph.alignment = 2
+
+    # Додаємо ім`я покупця
+    doc.add_paragraph(f"Покупець: {customer_name} {address}")
+
+    headers = ("№", "Назва", "Од. виміру", "Кількість", "Ціна", "Сума")
+    # Створюємо таблицю
+    table = doc.add_table(1, len(headers), "Table Grid")
+    # Додаємо заголовок
+    row = table.rows[0]
+    for cell, header in zip(row.cells, headers):
+        cell.text = header
+    # Додаємо рядки до таблиці та знаходимо загальну вартість
     total = 0
-    table = doc.tables[0]
-    for i, product in enumerate(products, 1):
-        full_price = (
-            float(products[product]["quantity"]) *
-            float(products[product]["price"])
-        )
+    for i, product in enumerate(products.values(), 1):
+        full_price = float(product["quantity"]) * float(product["price"])
+        # Знаходимо загальну вартість
         total += full_price
         values = (
             i,
-            products[product]["name"],
-            products[product]["unit"],
-            products[product]["quantity"],
-            products[product]["price"],
+            product["name"],
+            product["unit"],
+            product["quantity"],
+            product["price"],
             full_price
         )
+        # Додаємо рядки до таблиці
         row = table.add_row()
         for cell, value in zip(row.cells, values):
             cell.text = str(value)
 
-    def substitute_invoice_no(match):
-        count = match.group(2).count("_")
-        s = "{:_>%d}" % count
-        return match.group(1) + s.format(invoice_no)
+    # Всановлюємо розміри клітинок таблиці
+    widths = (Cm(2.0), Cm(5.0), Cm(3.0), Cm(1.5), Cm(1.5))
+    for column, width in zip(table.columns, widths):
+        set_column_width(column, width)
 
-    def substitute_date(match):
-        return match.group(1) + str(date)
-
-    def substitute_customer(match):
-        return match.group(1) + customer_name + " " + address
-
-    def substitute_total(match):
-        return match.group(1) + str(total)
-
-    for paragraph in doc.paragraphs:
-        for run in paragraph.runs:
-            run.text = re.sub(INVOICE, substitute_invoice_no, run.text)
-            run.text = re.sub(DATE, substitute_date, run.text)
-            run.text = re.sub(CUSTOMER, substitute_customer, run.text)
-            run.text = re.sub(TOTAL, substitute_total, run.text)
+    doc.add_paragraph()
+    # Додаємо загальну вартість
+    paragraph = doc.add_paragraph(f"Всього: {total}")
+    paragraph.alignment = 2
 
     doc.save(f"invoice_{customer_name}_{''.join(date.split('.'))}.docx")
 
 
 if __name__ == "__main__":
-    create_invoice(253, "data.xlsx", "template.docx")
+    create_invoice(253, "data.xlsx")
