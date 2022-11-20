@@ -29,7 +29,6 @@ def train(trans_time, arr_time):
     global q, result
     sleep(arr_time)
     log("прибув до ділянки")
-    lock.acquire()
     with lock:
         if q == N:
             result += 1
@@ -54,7 +53,7 @@ if __name__ == "__main__":
             threading.Thread(
                 target=train,
                 args=(transit_time, arrive_time),
-                name=f"Train {i}"
+                name=f"Потяг {i}"
             )
         )
         print(

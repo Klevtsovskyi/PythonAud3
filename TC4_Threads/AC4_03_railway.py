@@ -41,7 +41,7 @@ if __name__ == "__main__":
             threading.Thread(
                 target=train,
                 args=(transit_time, arrive_time),
-                name=f"Train {i}"
+                name=f"Потяг {i}"
             )
         )
         print(
