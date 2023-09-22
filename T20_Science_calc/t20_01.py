@@ -2,9 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-@np.vectorize
 def func01(n):
-    return 3 / 2 * (1 - 1/pow(3, n+1)) * (n - 3) * pow(n, 1/n) / (2.0 * n + 5 / n)
+    return 3 / 2 * (1 - 1/np.power(3, n+1)) * (n - 3) * np.power(n, 1/n) / (2.0 * n + 5 / n)
 
 
 def gety(f, x):
@@ -19,6 +18,9 @@ def gety(f, x):
 def plot_seq(x, y, b=None, eps=0.01, forall=True):
     """ Візуалізує послідовність y = f(x)"""
     plt.figure(figsize=(12, 9))
+    # Підписуємо вісі
+    plt.xlabel("n")
+    plt.ylabel("a(n)")
     if b is None:
         # Якщо границя послідовності невідома, будуємо послідовнісь
         # та повертаємо її останній елемент за розбиттям
@@ -27,25 +29,17 @@ def plot_seq(x, y, b=None, eps=0.01, forall=True):
     else:
         # Якщо границя послідовності відома,
         # перевіряємо, чи потрапляють останні елементи у проміжок
+        s = np.abs(y - b) < eps
 
-        # Номер першого елемента послідовності, який потрапив
-        # у проміжок разом з наступними
         k = -1
-        # Чи потрапив попередній елемент у проміжок
-        prev = False
-        # Перевіряємо, чи потрапляють у проміжок елементи послідовності
-        for i in range(y.size):
-            if abs(y[i] - b) < eps:
-                if not prev:
-                    k = i
-                    prev = True
-            else:
-                prev = False
-
         # Якщо останній елемент послідовності не потрапив у проміжок,
         # повертаємо None
-        if not prev:
+        if s[k] == 0:
             return None, None
+
+        while s[k] > 0:
+            k -= 1
+        k = k % s.size + 1
 
         # Якщо forall=True, будуємо на графіку всі елементи,
         # інакше тільки ті, що потрапили в проміжок
@@ -56,9 +50,6 @@ def plot_seq(x, y, b=None, eps=0.01, forall=True):
         plt.plot(np.array((x[begin], x[-1])), np.array((b, b)), "-r")
         plt.plot(np.array((x[begin], x[-1])), np.array((b - eps, b - eps)), "--g")
         plt.plot(np.array((x[begin], x[-1])), np.array((b + eps, b + eps)), "--g")
-        # Підписуємо вісі
-        plt.xlabel("n")
-        plt.ylabel("a(n)")
         # Встановлюємо зріз ділянки, яка показує графік
         plt.axis([x[begin], x[-1], b - eps*2, b + eps*2])
         # Повертаємо номер останнього елемента послідовності,
