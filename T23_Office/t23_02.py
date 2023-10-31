@@ -2,7 +2,7 @@ from docx import Document
 import re
 
 
-DATE1 = r"\b\d{1,4}/\d{1,2}/\d{1,2}"  # 1999/3/12
+DATE1 = r"\b\d{1,4}/\d{1,2}/\d{1,2}"    # 1999/3/12
 DATE2 = r"\b\d{1,2}\.\d{1,2}\.\d{1,4}"  # 12.3.1999
 DATE = DATE1 + "|" + DATE2
 
@@ -31,7 +31,8 @@ def change_dates_docx(inp, out):
     doc = Document(inp)
 
     for paragraph in doc.paragraphs:
-        paragraph.text = change_dates(paragraph.text)
+        for run in paragraph.runs:
+            run.text = change_dates(run.text)
 
     doc.save(out)
 
