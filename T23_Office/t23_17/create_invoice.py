@@ -97,7 +97,7 @@ def create_invoice(invoice_no: int, datafile: str):
         for cell, value in zip(row.cells, values):
             cell.text = str(value)
 
-    # Всановлюємо розміри клітинок таблиці
+    # Встановлюємо розміри клітинок таблиці
     widths = (Cm(2.0), Cm(5.0), Cm(3.0), Cm(1.5), Cm(1.5))
     for column, width in zip(table.columns, widths):
         set_column_width(column, width)
