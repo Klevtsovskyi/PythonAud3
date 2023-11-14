@@ -31,6 +31,7 @@ def train(trans_time, arr_time):
     log("прибув до ділянки")
     with lock:
         if q == N:
+            log("очікує на звільнення ділянки")
             result += 1
     with semaphore:
         with lock:
