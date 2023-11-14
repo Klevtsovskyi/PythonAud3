@@ -21,7 +21,7 @@ result = 0
 
 def log(message: str):
     t = time() - start
-    name = threading.current_thread().getName()
+    name = threading.current_thread().name
     logging.debug("[%6.3f] %s: %s", t, name, message)
 
 
@@ -40,7 +40,7 @@ def train(trans_time, arr_time):
         with lock:
             q -= 1
     log("пройшов ділянку")
-    print(f"{threading.current_thread().getName()} пройшов ділянку.")
+    print(f"{threading.current_thread().name} пройшов ділянку.")
 
 
 if __name__ == "__main__":
